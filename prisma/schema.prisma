@@ -9,3 +9,41 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  role    Role     @default(USER)
+  profile Profile?
+}
+
+model Profile {
+  id           Int     @id @default(autoincrement())
+  name         String?
+  user         User    @relation(fields: [userId], references: [id])
+  userId       Int     @unique
+  phone_number String  @unique
+}
+
+model Books {
+  id                    Int        @id @default(autoincrement())
+  title                 String
+  class                 Int
+  subject               String?
+  price                 String
+  durability            Durability
+  durability_decription String?
+}
+
+enum Durability {
+  Factory_new
+  Minimal_wear
+  Field_tested
+  Well_worn
+  Battle_scared
+}
+
+enum Role {
+  USER
+  ADMIN
+}
