@@ -2,11 +2,15 @@ import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import dotenv from "dotenv";
 const dotenvConfig = dotenv.config();
+// import "./src/auth/OIDCStrategy";
 import morgan from "morgan";
 import cors from "cors";
 import { CustomError } from "./src/shared/errors";
 import { StatusCodes } from "http-status-codes";
-import { testRouter } from "./src/routes/api";
+// import { testRouter } from "./src/routes/api";
+import { authRouter } from "./src/routes/auth/api";
+import session from "express-session";
+import { profileRouter } from "./src/routes/profile/api";
 
 if (dotenvConfig.error) {
   throw dotenvConfig.error;
@@ -19,10 +23,19 @@ const app = express();
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(
+  session({
+    secret: "process.env.SESSION_SECRET",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
 
 // Routes
-
-app.use("/", testRouter);
+app.use("/", authRouter);
+app.use("/profile", profileRouter);
+// app.use("/", testRouter);
 
 // Error handler
 
