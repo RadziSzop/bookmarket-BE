@@ -18,12 +18,12 @@ model User {
 }
 
 model Profile {
-  id           Int     @id @default(autoincrement())
-  name         String
-  user         User    @relation(fields: [userId], references: [id])
-  userId       Int     @unique
-  phone_number String? @unique
-  contat_email String? @unique
+  id            Int     @id @default(autoincrement())
+  name          String
+  user          User    @relation(fields: [userId], references: [id])
+  userId        Int     @unique
+  phone_number  String? @unique
+  contact_email String? @unique
 }
 
 model Books {
