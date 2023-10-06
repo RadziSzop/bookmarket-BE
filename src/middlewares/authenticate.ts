@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { Response, Request, NextFunction } from "express";
 export const authenticate = (
   req: Request,
@@ -10,7 +10,7 @@ export const authenticate = (
 
   if (authHeader) {
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, jwtSecret, (err, user) => {
+    jwt.verify(token, jwtSecret, (err, user: JwtPayload) => {
       if (err || user.tokenType !== "access") {
         return res.status(403).json({
           success: false,

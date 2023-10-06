@@ -11,7 +11,7 @@ export const getProfile = async (req: Request, res: Response) => {
     });
     console.log({ user });
 
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
     console.log("get profile error", error);
     return res.status(500).json({
@@ -38,7 +38,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         phone_number: phoneNumber,
       },
     });
-    res.json(user);
+    res.status(201).json({ success: true });
   } catch (error) {
     console.log("get profile error", error);
     return res.status(500).json({

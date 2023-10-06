@@ -12,7 +12,8 @@ profileRouter.put(
   "/",
   authenticate,
   body("phoneNumber")
-    .isMobilePhone("any")
+    .isString()
+    .isLength({ min: 9, max: 9 })
     .withMessage("Niepoprawny numer telefonu|201"),
   body("contactEmail").isEmail().withMessage("Niepoprawny adres email|202"),
   validateBody,
