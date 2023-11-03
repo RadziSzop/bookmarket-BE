@@ -11,6 +11,7 @@ import { StatusCodes } from "http-status-codes";
 import { authRouter } from "./src/routes/auth/api";
 import session from "express-session";
 import { profileRouter } from "./src/routes/profile/api";
+import { storeRouter } from "./src/routes/store/api";
 
 if (dotenvConfig.error) {
   throw dotenvConfig.error;
@@ -35,6 +36,7 @@ app.use(
 // Routes
 app.use("/", authRouter);
 app.use("/profile", profileRouter);
+app.use("/store", storeRouter);
 // app.use("/", testRouter);
 
 // Error handler

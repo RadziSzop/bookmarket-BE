@@ -15,6 +15,7 @@ model User {
   email   String   @unique
   role    Role     @default(USER)
   profile Profile?
+  Books   Books[]
 }
 
 model Profile {
@@ -27,21 +28,35 @@ model Profile {
 }
 
 model Books {
-  id                    Int        @id @default(autoincrement())
-  title                 String
-  class                 Int
-  subject               String?
-  price                 String
-  durability            Durability
-  durability_decription String?
+  id        Int      @id @default(autoincrement())
+  title     String
+  class     Int?
+  subject   Subject?
+  price     Int
+  condition Int
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }
 
-enum Durability {
-  Factory_new
-  Minimal_wear
-  Field_tested
-  Well_worn
-  Battle_scared
+enum Subject {
+  Matematyka
+  Polski
+  Angielski
+  Niemiecki
+  Historia
+  Biologia
+  Chemia
+  Fizyka
+  Geografia
+  WOS
+  Informatyka
+  Plastyka
+  Muzyka
+  Religia
+  WF
+  Technika
+  Przyroda
+  Inne
 }
 
 enum Role {
