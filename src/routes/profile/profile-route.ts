@@ -4,14 +4,19 @@ const prisma = new PrismaClient();
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const user = req.user as number;
-    const { name, phone_number } = await prisma.profile.findUnique({
+
+    const { email, role, profile } = await prisma.user.findUnique({
       where: {
-        userId: user,
+        id: user,
+      },
+      select: {
+        email: true,
+        role: true,
+        profile: true,
       },
     });
-    console.log({ user });
 
-    res.status(200).json(user);
+    res.status(200).json({ email, role, profile });
   } catch (error) {
     console.log("get profile error", error);
     return res.status(500).json({
