@@ -16,7 +16,14 @@ export const getProfile = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json({ email, role, profile });
+    res.status(200).json({
+      success: true,
+      data: {
+        email,
+        role,
+        profile,
+      },
+    });
   } catch (error) {
     console.log("get profile error", error);
     return res.status(500).json({
