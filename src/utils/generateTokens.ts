@@ -25,11 +25,11 @@ export const generateTokens = (data: jwt.JwtPayload) => {
   return {
     accessToken: {
       token: token,
-      expireDate: getUnixTime(add(new Date(), { hours: 4 })),
+      expireDate: getUnixTime(add(new Date(), { hours: 4 })) * 1000,
     },
     refreshToken: {
       token: refreshToken,
-      expireDate: getUnixTime(add(new Date(), { days: 7 })),
+      expireDate: getUnixTime(add(new Date(), { days: 7 })) * 1000,
     },
   };
 };

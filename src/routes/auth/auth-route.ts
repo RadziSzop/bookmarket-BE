@@ -9,7 +9,7 @@ export const AzureLogin = async (req: Request, res: Response) => {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
     console.log(tokens);
-    res.redirect(process.env.CLIENT_URL);
+    res.redirect(`${process.env.CLIENT_URL}/login`);
   } catch (error) {
     console.log("azure login error", error);
     return res.status(500).json({
