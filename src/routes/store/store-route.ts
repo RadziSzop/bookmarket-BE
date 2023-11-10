@@ -20,6 +20,7 @@ export const addBook = async (req: Request, res: Response) => {
     const user = req.user as number;
     const book = await prisma.books.create({
       data: {
+        image: req.file.filename,
         title,
         price,
         class: classNumber || null,
