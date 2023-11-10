@@ -32,7 +32,7 @@ app.use(
     cookie: { secure: false },
   })
 );
-
+app.use(express.static("public"));
 // Routes
 app.use("/", authRouter);
 app.use("/profile", profileRouter);

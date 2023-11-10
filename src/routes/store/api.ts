@@ -1,7 +1,7 @@
 import "../../auth/OIDCStrategy";
 import { Router } from "express";
 import { authenticate } from "../../middlewares/authenticate";
-import { addBook } from "./store-route";
+import { addBook, getBooks } from "./store-route";
 import { body } from "express-validator";
 import { validateBody } from "../../utils/validateBody";
 import { validateAttachments } from "../../utils/validateAttachments";
@@ -60,3 +60,5 @@ storeRouter.post(
   validateBody,
   addBook
 );
+
+storeRouter.get("/", authenticate, getBooks);

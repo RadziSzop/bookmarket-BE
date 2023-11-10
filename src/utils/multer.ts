@@ -1,7 +1,7 @@
 import multer from "multer";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "images");
+    cb(null, "public/images");
   },
   filename: (req, file, cb) => {
     cb(null, `${req.user}-${Date.now()}.${file.mimetype.split("/")[1]}`);
