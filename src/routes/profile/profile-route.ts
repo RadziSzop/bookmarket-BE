@@ -15,7 +15,7 @@ export const getProfile = async (req: Request, res: Response) => {
         profile: true,
       },
     });
-
+    profile.extraContact = JSON.parse(profile.extraContact);
     res.status(200).json({
       success: true,
       data: {
@@ -36,18 +36,17 @@ export const getProfile = async (req: Request, res: Response) => {
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {
-    const { contactEmail, phoneNumber } = req.body as {
-      contactEmail: string;
-      phoneNumber: string;
-    };
+    const extraContact = req.body as {
+      socialName: string;
+      socialLink: string;
+    }[];
     const user = req.user as number;
     await prisma.profile.update({
       where: {
         userId: user,
       },
       data: {
-        contact_email: contactEmail,
-        phone_number: phoneNumber,
+        extraContact: JSON.stringify(extraContact),
       },
     });
     res.status(201).json({ success: true });

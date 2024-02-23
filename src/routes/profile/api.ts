@@ -11,11 +11,23 @@ profileRouter.get("/", authenticate, getProfile);
 profileRouter.put(
   "/",
   authenticate,
-  body("phoneNumber")
-    .isString()
-    .isLength({ min: 9, max: 9 })
-    .withMessage("Niepoprawny numer telefonu|201"),
-  body("contactEmail").isEmail().withMessage("Niepoprawny adres email|202"),
+  body("extraContact")
+    .isArray({ min: 1, max: 5 })
+    .withMessage("Niepoprawny format danych|203")
+    .custom((value) => {
+      value.forEach(({ socialLink, socialName }) => {
+        if (typeof socialLink !== "string" || typeof socialName !== "string") {
+          throw new Error("Niepoprawny format danych|204");
+        }
+        if (socialLink.length < 2 || socialName.length < 2) {
+          throw new Error("Niepoprawny format danych|205");
+        }
+        if (socialLink.length > 64 || socialName.length > 64) {
+          throw new Error("Niepoprawny format danych|206");
+        }
+      });
+      return true;
+    }),
   validateBody,
   updateProfile
 );
