@@ -66,11 +66,41 @@ export const getBooks = async (req: Request, res: Response) => {
       data: books,
     });
   } catch (error) {
-    console.log("get profile error", error);
+    console.log("get books error", error);
     return res.status(500).json({
       success: false,
       message: "Server error",
       errorCode: 198,
+    });
+  }
+};
+export const getBook = async (req: Request, res: Response) => {
+  try {
+    const book = await prisma.books.findFirst({
+      select: {
+        class: true,
+        condition: true,
+        id: true,
+        image: true,
+        price: true,
+        subject: true,
+        title: true,
+      },
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      data: book,
+    });
+  } catch (error) {
+    console.log("get book error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      errorCode: 197,
     });
   }
 };

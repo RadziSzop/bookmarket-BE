@@ -1,8 +1,8 @@
 import "../../auth/OIDCStrategy";
 import { Router } from "express";
 import { authenticate } from "../../middlewares/authenticate";
-import { addBook, getBooks } from "./store-route";
-import { body } from "express-validator";
+import { addBook, getBook, getBooks } from "./store-route";
+import { body, query } from "express-validator";
 import { validateBody } from "../../utils/validateBody";
 import { validateAttachments } from "../../utils/validateAttachments";
 
@@ -62,3 +62,9 @@ storeRouter.post(
 );
 
 storeRouter.get("/", authenticate, getBooks);
+storeRouter.get(
+  "/:id",
+  authenticate,
+  query("id").isUUID().withMessage("Nieodpowiednie ID książki|408"),
+  getBook
+);
