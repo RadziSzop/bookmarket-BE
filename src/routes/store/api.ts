@@ -1,12 +1,20 @@
 import "../../auth/OIDCStrategy";
 import { Router } from "express";
 import { authenticate } from "../../middlewares/authenticate";
-import { addBook, getBook, getBooks } from "./store-route";
+import {
+  addBook,
+  getBook,
+  getBooks,
+  reserveBook,
+  getMineBooks,
+} from "./store-route";
 import { body, query } from "express-validator";
 import { validateBody } from "../../utils/validateBody";
 import { validateAttachments } from "../../utils/validateAttachments";
+import { PrismaClient } from "@prisma/client";
 
 export const storeRouter = Router();
+const prisma = new PrismaClient();
 
 storeRouter.post(
   "/",
@@ -60,11 +68,29 @@ storeRouter.post(
   validateBody,
   addBook
 );
+storeRouter.post(
+  "/reserve",
+  authenticate,
+  body("id")
+    .isUUID()
+    .withMessage("Nieodpowiednie ID książki|408")
+    .custom((value) => {
+      return !!prisma.books.findFirst({
+        where: {
+          id: value,
+        },
+      });
+    })
+    .withMessage("Taka książka nie istnieje|409"),
+  validateBody,
+  reserveBook
+);
 
 storeRouter.get("/", authenticate, getBooks);
+storeRouter.get("/mine", authenticate, getMineBooks);
 storeRouter.get(
   "/:id",
   authenticate,
-  query("id").isUUID().withMessage("Nieodpowiednie ID książki|408"),
+  query("id").isUUID().withMessage("Nieodpowiednie ID książki|410"),
   getBook
 );

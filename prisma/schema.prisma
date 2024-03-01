@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  role    Role     @default(USER)
-  profile Profile?
-  Books   Books[]
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  role         Role           @default(USER)
+  profile      Profile?
+  books        Books[]
+  reservations Reservations[]
 }
 
 model Profile {
@@ -27,15 +28,26 @@ model Profile {
 }
 
 model Books {
-  image     String
-  id        String   @id @default(uuid())
-  title     String
-  class     Int?
-  subject   Subject?
-  price     Int
-  condition Int
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  image       String
+  id          String        @id @default(uuid())
+  title       String
+  class       Int?
+  subject     Subject?
+  price       Int
+  condition   Int
+  userId      Int
+  reserved    Boolean       @default(false)
+  user        User          @relation(fields: [userId], references: [id])
+  reservation Reservations?
+}
+
+model Reservations {
+  bookId         String   @id
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  book           Books    @relation(fields: [bookId], references: [id])
+  createdAt      DateTime @default(now())
+  reservationEnd DateTime
 }
 
 enum Subject {

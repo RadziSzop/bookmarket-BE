@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { add } from "date-fns";
 import { PrismaClient, Subject } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -74,6 +75,7 @@ export const getBooks = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const getBook = async (req: Request, res: Response) => {
   try {
     const book = await prisma.books.findFirst({
@@ -101,6 +103,86 @@ export const getBook = async (req: Request, res: Response) => {
       success: false,
       message: "Server error",
       errorCode: 197,
+    });
+  }
+};
+
+export const reserveBook = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.body as {
+      id: string;
+    };
+    const book = await prisma.books.update({
+      where: {
+        id,
+      },
+      data: {
+        reserved: true,
+      },
+    });
+    const reservation = await prisma.reservations.create({
+      data: {
+        reservationEnd: add(new Date(), { days: 3 }),
+        book: {
+          connect: {
+            id,
+          },
+        },
+        user: {
+          connect: {
+            id: req.user as number,
+          },
+        },
+      },
+    });
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.log("reserve book error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      errorCode: 196,
+    });
+  }
+};
+
+export const getMineBooks = async (req: Request, res: Response) => {
+  try {
+    const books = await prisma.books.findMany({
+      select: {
+        class: true,
+        condition: true,
+        id: true,
+        image: true,
+        price: true,
+        subject: true,
+        title: true,
+        reservation: {
+          select: {
+            bookId: false,
+            reservationEnd: true,
+            userId: true,
+            createdAt: false,
+          },
+        },
+      },
+      where: {
+        userId: req.user as number,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      data: books,
+    });
+  } catch (error) {
+    console.log("get books error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      errorCode: 198,
     });
   }
 };
