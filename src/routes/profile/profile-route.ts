@@ -36,10 +36,12 @@ export const getProfile = async (req: Request, res: Response) => {
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {
-    const extraContact = req.body as {
-      socialName: string;
-      socialLink: string;
-    }[];
+    const { extraContact } = req.body as {
+      extraContact: {
+        socialName: string;
+        socialLink: string;
+      }[];
+    };
     const user = req.user as number;
     await prisma.profile.update({
       where: {
