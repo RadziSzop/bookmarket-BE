@@ -28,7 +28,7 @@ export const getProfile = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Server error",
-      errorCode: 199,
+      errorCode: 299,
     });
   }
 };
@@ -56,7 +56,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Server error",
-      errorCode: 199,
+      errorCode: 299,
     });
   }
 };
