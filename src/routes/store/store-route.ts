@@ -193,7 +193,50 @@ export const getMineBooks = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Server error",
-      errorCode: 198,
+      errorCode: 195,
+    });
+  }
+};
+
+export const deleteReservation = async (req: Request, res: Response) => {
+  try {
+    const bookId = req.params.id;
+    const reservation = await prisma.reservations.findFirst({
+      select: {
+        userId: true,
+        bookId: true,
+      },
+      where: {
+        bookId,
+      },
+    });
+    const book = await prisma.books.findFirst({
+      select: { userId: true },
+      where: {
+        id: bookId,
+      },
+    });
+    if (reservation.userId !== req.user || book.userId !== req.user) {
+      return res.status(403).json({
+        success: false,
+        message: "Brak dostępu",
+        errorCode: 193,
+      });
+    }
+    await prisma.reservations.delete({
+      where: {
+        bookId,
+      },
+    });
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.log("delete reservation error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      errorCode: 194,
     });
   }
 };

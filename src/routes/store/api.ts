@@ -7,6 +7,7 @@ import {
   getBooks,
   reserveBook,
   getMineBooks,
+  deleteReservation,
 } from "./store-route";
 import { body, query } from "express-validator";
 import { validateBody } from "../../utils/validateBody";
@@ -69,7 +70,7 @@ storeRouter.post(
   addBook
 );
 storeRouter.post(
-  "/reserve",
+  "/reservation",
   authenticate,
   body("id")
     .isUUID()
@@ -94,3 +95,4 @@ storeRouter.get(
   query("id").isUUID().withMessage("Nieodpowiednie ID książki|417"),
   getBook
 );
+storeRouter.delete("/reservation/:id", authenticate, deleteReservation);
