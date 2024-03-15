@@ -161,9 +161,20 @@ export const getMineBooks = async (req: Request, res: Response) => {
         title: true,
         reservation: {
           select: {
+            user: {
+              select: {
+                email: true,
+                profile: {
+                  select: {
+                    extraContact: true,
+                    name: true,
+                  },
+                },
+              },
+            },
             bookId: false,
             reservationEnd: true,
-            userId: true,
+            userId: false,
             createdAt: false,
           },
         },

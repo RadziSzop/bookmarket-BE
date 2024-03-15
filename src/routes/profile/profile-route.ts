@@ -15,7 +15,6 @@ export const getProfile = async (req: Request, res: Response) => {
         profile: true,
       },
     });
-    profile.extraContact = JSON.parse(profile.extraContact);
     res.status(200).json({
       success: true,
       data: {
@@ -48,7 +47,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         userId: user,
       },
       data: {
-        extraContact: JSON.stringify(extraContact),
+        extraContact,
       },
     });
     res.status(201).json({ success: true });

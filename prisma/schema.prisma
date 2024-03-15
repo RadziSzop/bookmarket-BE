@@ -20,11 +20,11 @@ model User {
 }
 
 model Profile {
-  id           Int     @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   name         String
-  user         User    @relation(fields: [userId], references: [id])
-  userId       Int     @unique
-  extraContact String?
+  user         User   @relation(fields: [userId], references: [id])
+  userId       Int    @unique
+  extraContact Json?
 }
 
 model Books {
