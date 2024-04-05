@@ -1,7 +1,6 @@
 import passport from "passport";
 import { OIDCStrategy } from "passport-azure-ad";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "../shared/prisma";
 
 passport.use(
   new OIDCStrategy(

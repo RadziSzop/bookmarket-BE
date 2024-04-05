@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../shared/prisma";
+
 export const checkReservations = async () => {
-  const prisma = new PrismaClient();
   await prisma.books.updateMany({
     where: {
       reservation: {

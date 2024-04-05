@@ -12,10 +12,9 @@ import {
 import { body, query } from "express-validator";
 import { validateBody } from "../../utils/validateBody";
 import { validateAttachments } from "../../utils/validateAttachments";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../shared/prisma";
 
 export const storeRouter = Router();
-const prisma = new PrismaClient();
 
 storeRouter.post(
   "/",

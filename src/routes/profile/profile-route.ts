@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "../../shared/prisma";
+
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const user = req.user as number;

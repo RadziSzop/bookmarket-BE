@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { add, compareAsc } from "date-fns";
-import { PrismaClient, Subject } from "@prisma/client";
+import { Subject } from "@prisma/client";
 import { checkReservations } from "../../utils/checkReservations";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../shared/prisma";
 
 export const addBook = async (req: Request, res: Response) => {
   try {
