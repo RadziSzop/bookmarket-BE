@@ -276,6 +276,14 @@ export const deleteReservation = async (req: Request, res: Response) => {
         errorCode: 193,
       });
     }
+    await prisma.books.update({
+      where: {
+        id: bookId,
+      },
+      data: {
+        reserved: false,
+      },
+    });
     await prisma.reservations.delete({
       where: {
         bookId,
