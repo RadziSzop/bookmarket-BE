@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { add } from "date-fns";
+import { add, compareAsc } from "date-fns";
 import { PrismaClient, Subject } from "@prisma/client";
+import { checkReservations } from "../../utils/checkReservations";
+
 const prisma = new PrismaClient();
 
 export const addBook = async (req: Request, res: Response) => {
@@ -50,6 +52,7 @@ export const addBook = async (req: Request, res: Response) => {
 
 export const getBooks = async (req: Request, res: Response) => {
   try {
+    await checkReservations();
     const books = await prisma.books.findMany({
       select: {
         class: true,
@@ -59,6 +62,9 @@ export const getBooks = async (req: Request, res: Response) => {
         price: true,
         subject: true,
         title: true,
+      },
+      where: {
+        reserved: false,
       },
     });
 
@@ -87,16 +93,46 @@ export const getBook = async (req: Request, res: Response) => {
         price: true,
         subject: true,
         title: true,
+        reservation: true,
+        reserved: true,
       },
       where: {
         id: req.params.id,
       },
     });
-
-    res.status(200).json({
-      success: true,
-      data: book,
-    });
+    if (!book)
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+        errorCode: 192,
+      });
+    if (
+      book.reserved &&
+      compareAsc(book.reservation.reservationEnd, new Date()) === -1
+    ) {
+      const book = await prisma.books.update({
+        where: {
+          id: req.params.id,
+        },
+        data: {
+          reserved: false,
+        },
+      });
+      await prisma.reservations.delete({
+        where: {
+          bookId: req.params.id,
+        },
+      });
+      res.status(200).json({
+        success: true,
+        data: book,
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        data: book,
+      });
+    }
   } catch (error) {
     console.log("get book error", error);
     return res.status(500).json({
@@ -112,7 +148,25 @@ export const reserveBook = async (req: Request, res: Response) => {
     const { id } = req.body as {
       id: string;
     };
-    const book = await prisma.books.update({
+    const book = await prisma.books.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!book)
+      return res.status(400).json({
+        success: false,
+        message: "Book not found",
+        errorCode: 191,
+      });
+    if (book.reserved) {
+      return res.status(400).json({
+        success: false,
+        message: "Book is already reserved",
+        errorCode: 190,
+      });
+    }
+    await prisma.books.update({
       where: {
         id,
       },
