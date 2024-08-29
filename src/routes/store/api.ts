@@ -8,6 +8,7 @@ import {
   reserveBook,
   getMineBooks,
   deleteReservation,
+  deleteBook,
 } from "./store-route";
 import { body, query } from "express-validator";
 import { validateBody } from "../../utils/validateBody";
@@ -95,3 +96,4 @@ storeRouter.get(
   getBook
 );
 storeRouter.delete("/reservation/:id", authenticate, deleteReservation);
+storeRouter.delete("/:id", authenticate, deleteBook);

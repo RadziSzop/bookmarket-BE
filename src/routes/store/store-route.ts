@@ -188,8 +188,30 @@ export const reserveBook = async (req: Request, res: Response) => {
         },
       },
     });
-    res.status(200).json({
+    const user = await prisma.books.findUnique({
+      where: {
+        id: reservation.bookId,
+      },
+      include: {
+        user: {
+          select: {
+            id: false,
+            email: true,
+            profile: {
+              select: {
+                id: false,
+                userId: false,
+                extraContact: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    res.status(201).json({
       success: true,
+      data: { user: user.user, reservationEnd: reservation.reservationEnd },
     });
   } catch (error) {
     console.log("reserve book error", error);
@@ -298,6 +320,40 @@ export const deleteReservation = async (req: Request, res: Response) => {
       success: false,
       message: "Server error",
       errorCode: 194,
+    });
+  }
+};
+
+export const deleteBook = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const book = await prisma.books.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+        errorCode: 189,
+      });
+    }
+    await prisma.books.delete({
+      where: {
+        id: id,
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Book deleted successfully",
+    });
+  } catch (error) {
+    console.log("delete book error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      errorCode: 188,
     });
   }
 };

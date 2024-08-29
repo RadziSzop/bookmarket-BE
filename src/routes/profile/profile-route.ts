@@ -12,7 +12,12 @@ export const getProfile = async (req: Request, res: Response) => {
       select: {
         email: true,
         role: true,
-        profile: true,
+        profile: {
+          select: {
+            name: true,
+            extraContact: true,
+          },
+        },
       },
     });
     res.status(200).json({
